@@ -6,20 +6,20 @@ menu "Button Game Configuration"
             Select between central controller (Master) or interactive button unit (Slave).
             Master coordinates game logic, Slave handles physical button interaction.
 
-        config CONFIG_BUTTON_GAME_VARIANT_MASTER
+        config BUTTON_GAME_VARIANT_MASTER
             bool "Central Controller (Master)"
             help
                 USB-connected game coordinator managing multiple button units.
                 Handles game logic, and USB communication.
 
-        config CONFIG_BUTTON_GAME_VARIANT_SLAVE
+        config BUTTON_GAME_VARIANT_SLAVE
             bool "Button Unit (Slave)"
             help
                 Standalone peripheral with physical button and LEDs.
                 Connects to Master device.
     endchoice
 
-    if CONFIG_BUTTON_GAME_VARIANT_SLAVE
+    if BUTTON_GAME_VARIANT_SLAVE
         config BUTTON_GAME_PIN_LED_POWER
             int "Power status LED GPIO"
             default 15
