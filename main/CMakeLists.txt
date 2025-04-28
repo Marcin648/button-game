@@ -1,5 +1,6 @@
 set(BUTTON_GAME_SRCS 
     "led.cpp"
+    "button.cpp"
 )
 
 idf_component_register(SRCS ${BUTTON_GAME_SRCS} INCLUDE_DIRS ".")
