@@ -1,5 +1,5 @@
 set(BUTTON_GAME_SRCS 
-    "slave.cpp"
+    "led.cpp"
 )
 
 idf_component_register(SRCS ${BUTTON_GAME_SRCS} INCLUDE_DIRS ".")
