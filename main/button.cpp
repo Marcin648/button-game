@@ -6,6 +6,7 @@ Button::Button(u8 pin, u32 debounce_time) {
     this->_pin = pin;
     this->_debounce_time = debounce_time;
     pinMode(pin, INPUT_PULLUP);
+
     attachInterruptArg(digitalPinToInterrupt(pin), Button::_on_change, this, CHANGE);
 }
 
@@ -19,13 +20,14 @@ void Button::attach_release_callback(std::function<void(void*)> callback, void* 
     this->_release_callback_arg = arg;
 }
 
-void Button::_on_change(void* instance) {
+void IRAM_ATTR Button::_on_change(void* instance) {
     Button* button = static_cast<Button*>(instance);
-    u32 now = millis();
     u8 state = !digitalRead(button->_pin);
+    u32 now = millis();
     
-    if (now - button->_toggle_time > button->_debounce_time) {
+    if (button->_state != state && now - button->_toggle_time > button->_debounce_time) {
         button->_toggle_time = now;
+        button->_state = state;
 
         switch (state) {
             case HIGH: {

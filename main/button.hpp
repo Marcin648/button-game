@@ -12,7 +12,8 @@ public:
     void attach_press_callback(std::function<void(void*)> callback, void* arg = nullptr);
     void attach_release_callback(std::function<void(void*)> callback, void* arg = nullptr);
 protected:
-    u8 _pin;    
+    u8 _pin;
+    u8 _state;
     u32 _debounce_time;
     u32 _toggle_time = 0;
 
