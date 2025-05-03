@@ -22,17 +22,21 @@ void LED::update() {
     u32 phase = now % this->_duration;
 
     switch (this->_state) {
-        case State::OFF:
+        case State::OFF: {
             this->_write(LOW);
             break;
-        case State::ON:
+        }
+        case State::ON: {
             this->_write(HIGH);
             break;
-        case State::BLINK:
+        }
+        case State::BLINK: {
             this->_write((period % 2 == 0) ? HIGH : LOW);
             break;
-        case State::PULSE:
+        }
+        case State::PULSE: {
             this->_write((period % 2 == 0) ? phase : this->_duration - phase, this->_duration);
             break;
+        }
     }
 }
