@@ -28,52 +28,36 @@ void Net::Network::_on_recv(const esp_now_recv_info_t* esp_now_info, const u8* d
 }
 
 void Net::Network::_on_heartbeat(const u8* peer_mac) {
-    if (!_network) {
-        return;
+    this->_last_heartbeat = millis();
+
+    if (this->_state != NetworkState::CONNECTED) {
+       this->_on_connected();
     }
 
-    _network->_last_heartbeat = millis();
+    this->add_peer(peer_mac);
 
-    if (_network->_state != NetworkState::CONNECTED) {
-       _network->_on_connected();
-    }
-
-    _network->add_peer(peer_mac);
-
-    if (_network->_heartbeat_callback) {
-        _network->_heartbeat_callback(_network->_heartbeat_callback_arg);
+    if (this->_heartbeat_callback) {
+        this->_heartbeat_callback(this->_heartbeat_callback_arg);
     }
 }
 
 void Net::Network::_on_data(const u8* peer_mac, u16 message_type, const u8* data, usize size) {
-    if (!_network) {
-        return;
-    }
-
-    if (_network->_data_callback) {
-        _network->_data_callback(_network->_data_callback_arg, message_type, data, size);
+    if (this->_data_callback) {
+        this->_data_callback(this->_data_callback_arg, message_type, data, size);
     }
 }
 
 void Net::Network::_on_connected() {
-    if (!_network) {
-        return;
-    }
-
-    _network->_state = NetworkState::CONNECTED;
-    if(_network->_connected_callback) {
-        _network->_connected_callback(_network->_connected_callback_arg);
+    this->_state = NetworkState::CONNECTED;
+    if(this->_connected_callback) {
+        this->_connected_callback(this->_connected_callback_arg);
     }
 }
 
 void Net::Network::_on_disconnected() {
-    if (!_network) {
-        return;
-    }
-
-    _network->_state = NetworkState::DISCONNECTED;
-    if(_network->_disconnected_callback) {
-        _network->_disconnected_callback(_network->_disconnected_callback_arg);
+    this->_state = NetworkState::DISCONNECTED;
+    if(this->_disconnected_callback) {
+        this->_disconnected_callback(this->_disconnected_callback_arg);
     }
 }
 

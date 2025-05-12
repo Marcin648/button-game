@@ -66,11 +66,11 @@ namespace Net {
         void* _disconnected_callback_arg = nullptr;
 
         void _send(PacketType type, u16 message_type = 0, const u8* data = nullptr, usize size = 0, const u8* peer_mac = nullptr);
+        
         static void _on_recv(const esp_now_recv_info_t* esp_now_info, const u8* data, int size);
-
-        static void _on_heartbeat(const u8* peer_mac);
-        static void _on_data(const u8* peer_mac, u16 message_type, const u8* data, usize size);
-        static void _on_connected();
-        static void _on_disconnected();
+        void _on_heartbeat(const u8* peer_mac);
+        void _on_data(const u8* peer_mac, u16 message_type, const u8* data, usize size);
+        void _on_connected();
+        void _on_disconnected();
     };
 }
