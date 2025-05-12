@@ -43,7 +43,7 @@ namespace Net {
         void send(u8 message_type, const u8* data = nullptr, usize size = 0, const u8* peer_mac = nullptr);
 
         void attach_heartbeat_callback(std::function<void(void*)> callback, void* arg = nullptr);
-        void attach_data_callback(std::function<void(void*, u16, const u8*, usize)> callback, void* arg = nullptr);
+        void attach_data_callback(std::function<void(void*, const u8*, u16, const u8*, usize)> callback, void* arg = nullptr);
         void attach_connected_callback(std::function<void(void*)> callback, void* arg = nullptr);
         void attach_disconnected_callback(std::function<void(void*)> callback, void* arg = nullptr);
 
@@ -58,7 +58,7 @@ namespace Net {
         std::function<void(void*)> _heartbeat_callback = nullptr;
         void* _heartbeat_callback_arg = nullptr;
 
-        std::function<void(void*, u16, const u8*, usize)> _data_callback = nullptr;
+        std::function<void(void*, const u8*, u16, const u8*, usize)> _data_callback = nullptr;
         void* _data_callback_arg = nullptr;
 
         std::function<void(void*)> _connected_callback = nullptr;

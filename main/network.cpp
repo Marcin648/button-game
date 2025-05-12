@@ -44,7 +44,7 @@ void Net::Network::_on_heartbeat(const u8* peer_mac) {
 
 void Net::Network::_on_data(const u8* peer_mac, u16 message_type, const u8* data, usize size) {
     if (this->_data_callback) {
-        this->_data_callback(this->_data_callback_arg, message_type, data, size);
+        this->_data_callback(this->_data_callback_arg, peer_mac, message_type, data, size);
     }
 }
 
@@ -122,7 +122,7 @@ void Net::Network::attach_heartbeat_callback(std::function<void(void*)> callback
     this->_heartbeat_callback_arg = arg;
 }
 
-void Net::Network::attach_data_callback(std::function<void(void*, u16, const u8*, usize)> callback, void* arg) {
+void Net::Network::attach_data_callback(std::function<void(void*, const u8*, u16, const u8*, usize)> callback, void* arg) {
     this->_data_callback = callback;
     this->_data_callback_arg = arg;
 }
