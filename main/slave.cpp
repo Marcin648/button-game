@@ -1,9 +1,33 @@
 #include <Arduino.h>
 
+#include "types.hpp"
+#include "button.hpp"
+#include "led.hpp"
+#include "network.hpp"
+#include "game_master.hpp"
+#include "game_slave.hpp"
+
+Button button(CONFIG_BUTTON_GAME_PIN_BUTTON);
+LED led_power(CONFIG_BUTTON_GAME_PIN_LED_POWER);
+LED led_button(CONFIG_BUTTON_GAME_PIN_LED_BUTTON);
+Net::Network network;
+
+Game::Slave slave;
+
+const u8 master_mac[6] = {0xF0, 0xF5, 0xBD, 0x2C, 0x3A, 0x68};
+
 void setup() {
-  Serial.begin(115200);
+    Serial.begin(115200);
+    network.begin();
+    slave.begin(&button, &led_button, &network, master_mac);
+    led_power.set(LED::State::ON);
 }
 
 void loop() {
-  delay(1000); // Delay for a second
+    network.update();
+    led_power.update();
+    led_button.update();
+    button.update();
+    slave.update();
+    delay(1);
 }
