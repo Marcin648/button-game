@@ -25,6 +25,5 @@ void loop() {
     led_power.update();
     led_button.update();
     button.update();
-    master.update();
     delay(1);
 }
