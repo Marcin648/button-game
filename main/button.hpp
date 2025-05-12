@@ -11,6 +11,8 @@ public:
 
     void attach_press_callback(std::function<void(void*)> callback, void* arg = nullptr);
     void attach_release_callback(std::function<void(void*)> callback, void* arg = nullptr);
+
+    void update();
 protected:
     u8 _pin;
     u8 _state;
@@ -22,6 +24,4 @@ protected:
 
     std::function<void(void*)> _release_callback = nullptr;
     void* _release_callback_arg = nullptr;
-
-    static void _on_change(void* instance);
 };

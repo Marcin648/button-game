@@ -43,7 +43,8 @@ void Master::_on_disconnected() {
 }
 
 void Master::_on_press() {
-    this->_pressed = true;
+    this->_state = State::PLAYING;
+    this->_network->send(static_cast<u8>(MessageType::START));
 }
 
 void Master::_on_trigger(const u8* trigger_mac) {
@@ -64,12 +65,4 @@ void Master::_on_data(const u8* peer_mac, u16 message_type, const u8* data, usiz
         case MessageType::START : break;
         case MessageType::WINNER : break;
     }
-}
-
-void Master::update() {
-    if (this->_pressed) {
-        this->_state = State::PLAYING;
-        this->_network->send(static_cast<u8>(MessageType::START));
-    }
-    this->_pressed = false;
 }

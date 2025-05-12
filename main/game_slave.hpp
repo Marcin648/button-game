@@ -12,7 +12,6 @@ namespace Game {
         Slave() = default;
 
         void begin(Button* button, LED* led, Net::Network* network, const u8* master_mac);
-        void update();
     protected:
         Button* _button = nullptr;
         LED* _led = nullptr;
@@ -22,7 +21,6 @@ namespace Game {
 
         State _state = State::WAITING;
 
-        bool _pressed = false;
         void _on_press();
 
         void _on_connected();

@@ -47,7 +47,9 @@ void Slave::_on_disconnected() {
 }
 
 void Slave::_on_press() {
-    this->_pressed = true;
+    if (this->_state == State::PLAYING) {
+        this->_network->send(static_cast<u8>(MessageType::TRIGGER));
+    }
 }
 
 void Slave::_on_start() {
@@ -83,12 +85,4 @@ void Slave::_on_data(const u8* peer_mac, u16 message_type, const u8* data, usize
             break;
         };
     }
-}
-
-void Slave::update() {
-    if (this->_pressed && this->_state == State::PLAYING) {
-        this->_network->send(static_cast<u8>(MessageType::TRIGGER));
-        this->_pressed = false;
-    }
-}
-    
+} 
