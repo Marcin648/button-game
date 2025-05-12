@@ -19,7 +19,7 @@ menu "Button Game Configuration"
                 Connects to Master device.
     endchoice
 
-    if BUTTON_GAME_VARIANT_SLAVE
+    if BUTTON_GAME_VARIANT_SLAVE || BUTTON_GAME_VARIANT_MASTER
         config BUTTON_GAME_PIN_LED_POWER
             int "Power status LED GPIO"
             default 15
