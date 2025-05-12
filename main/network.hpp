@@ -35,6 +35,8 @@ namespace Net {
 
         void begin();
 
+        void get_mac(u8* mac);
+
         void add_peer(const u8* peer_mac);
         void delete_peer(const u8* peer_mac);
 

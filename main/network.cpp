@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <WiFi.h>
+#include <esp_mac.h>
 
 Net::Network* Net::Network::_network = nullptr;
 
@@ -80,6 +81,14 @@ void Net::Network::begin() {
 
     _network = this;
     esp_now_register_recv_cb(_on_recv);
+}
+
+void Net::Network::get_mac(u8* mac) {
+    if (mac == nullptr) {
+        return;
+    }
+
+    esp_read_mac(mac, ESP_MAC_WIFI_STA);
 }
 
 void Net::Network::add_peer(const u8* peer_mac) {
