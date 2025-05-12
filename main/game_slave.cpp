@@ -11,7 +11,6 @@ void Slave::begin(Button* button, LED* led, Net::Network* network, const u8* mas
     this->_network = network;
 
     this->_state = State::WAITING;
-    this->_pressed = false;
 
     this->_network->get_mac(this->_mac);
     this->_network->add_peer(master_mac);

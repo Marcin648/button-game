@@ -10,7 +10,6 @@ void Master::begin(Button* button, LED* led, Net::Network* network) {
     this->_network = network;
 
     this->_state = State::WAITING;
-    this->_pressed = false;
 
     this->_led->set(LED::State::PULSE, LED_DURATION_WAITING);
 
