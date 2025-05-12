@@ -4,7 +4,6 @@
 #include "button.hpp"
 #include "led.hpp"
 #include "network.hpp"
-#include "game_master.hpp"
 #include "game_slave.hpp"
 
 Button button(CONFIG_BUTTON_GAME_PIN_BUTTON);
