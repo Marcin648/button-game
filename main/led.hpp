@@ -13,7 +13,7 @@ public:
 
     LED(u8 pin);
 
-    void set(State state, u32 duration = 0);
+    void set(State state, u32 duration = 1000);
     void update();
 protected:
     u8 _pin;
