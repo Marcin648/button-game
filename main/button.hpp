@@ -12,6 +12,9 @@ public:
     void attach_press_callback(std::function<void(void*)> callback, void* arg = nullptr);
     void attach_release_callback(std::function<void(void*)> callback, void* arg = nullptr);
 
+    u8 get_state();
+    u8 read();
+
     void update();
 protected:
     u8 _pin;

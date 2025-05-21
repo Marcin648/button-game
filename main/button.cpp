@@ -18,6 +18,14 @@ void Button::attach_release_callback(std::function<void(void*)> callback, void* 
     this->_release_callback_arg = arg;
 }
 
+u8 Button::get_state() {
+    return this->_state;
+}
+
+u8 Button::read() {
+    return !digitalRead(this->_pin);
+}
+
 void Button::update() {
     u8 state = !digitalRead(this->_pin);
     u32 now = millis();
