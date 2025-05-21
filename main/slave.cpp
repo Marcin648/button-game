@@ -12,7 +12,7 @@ LED led_button(CONFIG_BUTTON_GAME_PIN_LED_BUTTON);
 Net::Network network;
 Game::Slave slave;
 
-const u8 master_mac[6] = {0xF0, 0xF5, 0xBD, 0x2C, 0x3A, 0x68};
+const u8 master_mac[6] = {0xD8, 0x3B, 0xDA, 0x73, 0xC8, 0x1C};
 
 void setup() {
     Serial.begin(115200);
