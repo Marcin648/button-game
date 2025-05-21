@@ -61,7 +61,7 @@ void HIDKeyboard::send_key(HIDKey key, HIDModifier modifier) {
 }
 
 void HIDKeyboard::send_media(HIDMediaKey key) {
-    this->_media_key_queue[this->_key_queue_index] = key;
+    this->_media_key_queue[this->_media_key_queue_index] = key;
     ++this->_media_key_queue_index %= KEY_QUEUE_SIZE;
 }
 
