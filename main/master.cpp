@@ -16,7 +16,7 @@ HIDKeyboard keyboard;
 void setup() {
     Serial.begin(115200);
     network.begin();
-    master.begin(&button, &led_button, &network);
+    master.begin(&button, &led_button, &network, &keyboard);
     led_power.set(LED::State::ON);
 
     if (button.read() == LOW) {

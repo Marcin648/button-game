@@ -4,10 +4,11 @@
 
 using namespace Game;
 
-void Master::begin(Button* button, LED* led, Net::Network* network) {
+void Master::begin(Button* button, LED* led, Net::Network* network, HIDKeyboard* keyboard) {
     this->_button = button;
     this->_led = led;
     this->_network = network;
+    this->_keyboard = keyboard;
 
     this->_state = State::WAITING;
 
@@ -44,6 +45,8 @@ void Master::_on_disconnected() {
 void Master::_on_press() {
     this->_state = State::PLAYING;
     this->_network->send(static_cast<u8>(MessageType::START));
+    this->_keyboard->send_media(HIDMediaKey::PLAY_PAUSE);
+    this->_keyboard->send_media(HIDMediaKey::MUTE);
 }
 
 void Master::_on_trigger(const u8* trigger_mac) {
@@ -51,6 +54,8 @@ void Master::_on_trigger(const u8* trigger_mac) {
         ESP_LOGI("GameMaster", "Winner %02X:%02X:%02X:%02X:%02X:%02X", trigger_mac[0], trigger_mac[1], trigger_mac[2], trigger_mac[3], trigger_mac[4], trigger_mac[5]);
         this->_state = State::WINNER;
         this->_network->send(static_cast<u8>(MessageType::WINNER), trigger_mac, 6);
+        this->_keyboard->send_media(HIDMediaKey::PLAY_PAUSE);
+        this->_keyboard->send_media(HIDMediaKey::MUTE);
     }
 }
 

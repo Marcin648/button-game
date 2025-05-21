@@ -5,17 +5,19 @@
 #include <button.hpp>
 #include <led.hpp>
 #include <network.hpp>
+#include <hid_keyboard.hpp>
 
 namespace Game {
     class Master {
     public:
         Master() = default;
 
-        void begin(Button* button, LED* led, Net::Network* network);
+        void begin(Button* button, LED* led, Net::Network* network, HIDKeyboard* keyboard);
     protected:
         Button* _button = nullptr;
         LED* _led = nullptr;
         Net::Network* _network = nullptr;
+        HIDKeyboard* _keyboard = nullptr;
 
         State _state = State::WAITING;
 
