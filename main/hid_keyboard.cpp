@@ -55,12 +55,14 @@ void HIDKeyboard::begin() {
 }
 
 void HIDKeyboard::send_key(HIDKey key, HIDModifier modifier) {
-    this->_key = key;
-    this->_key_modifier = modifier;
+    this->_key_queue[this->_key_queue_index] = key;
+    this->_key_modifier_queue[this->_key_queue_index] = modifier;
+    ++this->_key_queue_index %= KEY_QUEUE_SIZE;
 }
 
 void HIDKeyboard::send_media(HIDMediaKey key) {
-    this->_media_key = key;
+    this->_media_key_queue[this->_key_queue_index] = key;
+    ++this->_media_key_queue_index %= KEY_QUEUE_SIZE;
 }
 
 void HIDKeyboard::_send_raport_keyboard(HIDKey key, HIDModifier modifier) {
@@ -78,36 +80,45 @@ void HIDKeyboard::_send_raport_media(HIDMediaKey media_key) {
     tud_hid_report(HID_REPORT_ID_CONSUMER, &media_keycode, sizeof(media_keycode));
 }
 
-void HIDKeyboard::_update_raport_keyboard() {
+void HIDKeyboard::_update_raport_keyboard(usize index) {
     u32 now = millis();
     if (this->_key_pressed && now - this->_key_pressed_timer > PRESS_DURATION) {
         this->_send_raport_keyboard(HIDKey::KEY_NONE, HIDModifier::NONE);
         this->_key_pressed = false;
-    } else if (this->_key != HIDKey::KEY_NONE) {
-        this->_send_raport_keyboard(this->_key, this->_key_modifier);
-        this->_key = HIDKey::KEY_NONE;
-        this->_key_modifier = HIDModifier::NONE;
+    } else if (this->_key_queue[index] != HIDKey::KEY_NONE) {
+        this->_send_raport_keyboard(this->_key_queue[index], this->_key_modifier_queue[index]);
+        this->_key_queue[index] = HIDKey::KEY_NONE;
+        this->_key_modifier_queue[index] = HIDModifier::NONE;
         this->_key_pressed = true;
         this->_key_pressed_timer = now;
     }
 }
 
-void HIDKeyboard::_update_raport_media() {
+void HIDKeyboard::_update_raport_media(usize index) {
     u32 now = millis();
     if (this->_media_key_pressed && now - this->_media_key_pressed_timer > PRESS_DURATION) {
         this->_send_raport_media(HIDMediaKey::NONE);
         this->_media_key_pressed = false;
-    } else if (this->_media_key != HIDMediaKey::NONE) {
-        this->_send_raport_media(this->_media_key);
-        this->_media_key = HIDMediaKey::NONE;
+    } else if (this->_media_key_queue[index] != HIDMediaKey::NONE) {
+        this->_send_raport_media(this->_media_key_queue[index]);
+        this->_media_key_queue[index] = HIDMediaKey::NONE;
         this->_media_key_pressed = true;
         this->_media_key_pressed_timer = now;
     }
 }
 
+// This queue code is a mess. I should be separated from HID logic, but who cares? Sometimes I need to sleep...
 void HIDKeyboard::update() {
     if (HIDKeyboard::_init && tud_mounted() && tud_hid_ready()) {
-        this->_update_raport_keyboard();
-        this->_update_raport_media();
+        for(usize i = 0; i < KEY_QUEUE_SIZE; i++) {
+            if (this->_key_pressed || this->_key_queue[i] != HIDKey::KEY_NONE) {
+                this->_update_raport_keyboard(i);
+                break;
+            }
+            if (this->_media_key_pressed || this->_media_key_queue[i] != HIDMediaKey::NONE) {
+                this->_update_raport_media(i);
+                break;
+            }
+        }
     }
 }
