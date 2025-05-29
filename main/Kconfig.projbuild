@@ -19,26 +19,25 @@ menu "Button Game Configuration"
                 Connects to Master device.
     endchoice
 
-    if BUTTON_GAME_VARIANT_SLAVE || BUTTON_GAME_VARIANT_MASTER
-        config BUTTON_GAME_PIN_LED_POWER
-            int "Power status LED GPIO"
-            default 15
-            range 0 39
-            help
-                GPIO number for power indicator LED
+    config BUTTON_GAME_PIN_LED_POWER
+        int "Power status LED GPIO"
+        default 15
+        range 0 39
+        help
+            GPIO number for power LED
 
-        config BUTTON_GAME_PIN_LED_BUTTON
-            int "Button feedback LED GPIO"
-            default 3
-            range 0 39
-            help
-                GPIO for button reaction LED
+    config BUTTON_GAME_PIN_LED_BUTTON
+        int "Button feedback LED GPIO"
+        default 3
+        range 0 39
+        help
+            GPIO for button LED
 
-        config BUTTON_GAME_PIN_BUTTON
-            int "Main button input GPIO"
-            default 14
-            range 0 39
-            help
-                GPIO connected to momentary push button
-    endif
+    config BUTTON_GAME_PIN_BUTTON
+        int "Main button input GPIO"
+        default 14
+        range 0 39
+        help
+            GPIO connected to push button
+            
 endmenu
