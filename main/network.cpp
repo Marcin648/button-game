@@ -7,22 +7,24 @@
 Net::Network* Net::Network::_network = nullptr;
 
 void Net::Network::_on_recv(const esp_now_recv_info_t* esp_now_info, const u8* data, int size) {
-    if (size < sizeof(Packet)) {
+    if (size < sizeof(PacketHeader)) {
         return;
     }
 
-    const Packet* packet = reinterpret_cast<const Packet*>(data);
-    if (packet->magic != MAGIC) {
+    const PacketHeader* header = reinterpret_cast<const PacketHeader*>(data);
+    if (header->magic != MAGIC) {
         return;
     }
+
+    const u8* payload = data + sizeof(*header);
 
     if (_network) {
-        switch (static_cast<PacketType>(packet->type)) {
+        switch (static_cast<PacketType>(header->type)) {
             case PacketType::HEARTBEAT:
                 _network->_on_heartbeat(esp_now_info->src_addr);
                 break;
             case PacketType::DATA:
-                _network->_on_data(esp_now_info->src_addr, packet->message_type, packet->payload, size - sizeof(Packet));
+                _network->_on_data(esp_now_info->src_addr, header->message_type, payload, size - sizeof(*header));
                 break;
         }
     }
@@ -63,16 +65,19 @@ void Net::Network::_on_disconnected() {
 }
 
 void Net::Network::_send(PacketType type, u16 message_type, const u8* data, usize size, const u8* peer_mac) {
-    Packet packet = {0};
-    packet.magic = MAGIC;
-    packet.type = type;
-    packet.message_type = message_type;
+    u8 packet[sizeof(PacketHeader) + MAX_PAYLOAD_SIZE] = {0};
+    PacketHeader* header = reinterpret_cast<PacketHeader*>(packet);
+    u8* payload = packet + sizeof(*header);
+
+    header->magic = MAGIC;
+    header->type = type;
+    header->message_type = message_type;
 
     usize payload_size = std::min(size, MAX_PAYLOAD_SIZE);
 
-    memcpy(packet.payload, data, payload_size);
+    memcpy(payload, data, payload_size);
 
-    esp_now_send(peer_mac, reinterpret_cast<const u8*>(&packet), sizeof(packet) + payload_size);
+    esp_now_send(peer_mac, reinterpret_cast<const u8*>(packet), sizeof(*header) + payload_size);
 }
 
 void Net::Network::begin() {

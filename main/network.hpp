@@ -17,11 +17,10 @@ namespace Net {
         DATA = 1,
     };
 
-    struct Packet {
+    struct PacketHeader {
         u32 magic;
         PacketType type;
         u8 message_type;
-        u8 payload[MAX_PAYLOAD_SIZE];
     };
 
     enum class NetworkState : u8 {
